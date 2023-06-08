@@ -394,17 +394,26 @@ class Graph(nx.Graph):
         pickle.dump(self, open(filename, 'wb'))
 
     # visualization
-    def show(self, **kwargs):
-        if 'mode' not in kwargs:
-            show(self, mode=None, **kwargs)
+    def show(self, notshow=False, **kwargs):
+        if notshow:
+            if 'mode' not in kwargs:
+                return show(self, mode=None, notshow=notshow, **kwargs)
+            else:
+                return show(self, notshow=notshow, **kwargs)
         else:
-            show(self, **kwargs)
+            if 'mode' not in kwargs:
+                show(self, mode=None, **kwargs)
+            else:
+                show(self, **kwargs)
 
-    def show_samples(self, samples, **kwargs):
+    def show_samples(self, samples, notshow=False, **kwargs):
         nids = self.sample2nodes(samples)
         target = [1 if nid in nids else 0 for nid in self.nodes]
         color = Color(target, target_by='node', dtype='categorical')
-        show(self, mode=None, color=color, **kwargs)
+        if notshow:
+            return show(self, mode=None, notshow=notshow, color=color, **kwargs)
+        else:
+            show(self, mode=None, color=color, **kwargs)
 
     # attr
     @property
